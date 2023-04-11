@@ -1,0 +1,9 @@
+[user]
+	name = martin stadler
+	email = martin@sansnom.co
+[color]
+    ui = auto
+[core]
+    excludesfile = ~/.gitignore_global
+    pager = less -R
+    editor = vim
