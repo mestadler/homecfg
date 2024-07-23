@@ -7,6 +7,9 @@
 # Auto-logout after 100 minutes of inactivity
 export TMOUT=6000
 
+# --- Tokens ---
+export OPENAI_GPT_API_KEY=$(cat ~/.tokens/openai_gpt_api_key)
+
 # --- Editor settings ---
 # Set Neovim as the default editor
 alias vi='nvim'

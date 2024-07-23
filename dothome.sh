@@ -74,6 +74,7 @@ files=(
     .bashrc-developer
     .gitconfig
     .vimrc
+    .sgptrc
 )
 
 # Loop through the list of files and apply the backup and copy function
@@ -81,13 +82,16 @@ for file in "${files[@]}"; do
     backup_and_copy "$file"
 done
 
-# Backup and copy kitty.conf to the correct location
-backup_and_copy_to_dir "kitty.conf" "$HOME/.config/kitty"
-
 # Backup and copy init.nvim to the correct location
 backup_and_copy_to_dir "init.nvim" "$HOME/.config/nvim"
 
-# Source the .bashrc file to apply the changes
+# Backup and copy kitty.conf to the correct location
+backup_and_copy_to_dir "kitty.conf" "$HOME/.config/kitty"
+
+# Backup and copy .sgptrc to the correct location
+backup_and_copy_to_dir ".sgptrc" "$HOME/.config/shell_gpt"
+
+# Source the .bashrc file to apply the changes if it exists
 if [[ -e "$HOME/.bashrc" ]]; then
     log "Sourcing $HOME/.bashrc"
     $DRY_RUN || source $HOME/.bashrc
@@ -98,3 +102,4 @@ log "Removing download directory $DOWNLOAD_DIR"
 $DRY_RUN || rm -rf $DOWNLOAD_DIR
 
 log "Script completed successfully."
+

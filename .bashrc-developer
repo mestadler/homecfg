@@ -17,6 +17,7 @@ export GIT_AUTHOR_NAME="$DEBFULLNAME"
 export GIT_AUTHOR_EMAIL="$DEBEMAIL"
 export GIT_COMMITTER_NAME="$DEBFULLNAME"
 export GIT_COMMITTER_EMAIL="$DEBEMAIL"
+export GIT_EDITOR="nvim"
 
 # GitHub functions
 
@@ -37,7 +38,7 @@ function gh_clone() {
 function gh_create_repo() {
     if [ -z "$1" ]; then
         echo "Usage: gh_create_repo <repository_name>"
-        return 1
+        return 1;
     fi
     curl -u $GITHUB_USERNAME:$GITHUB_TOKEN https://api.github.com/user/repos -d "{\"name\":\"$1\"}" || { echo "Failed to create repository"; return 1; }
 }
@@ -48,7 +49,7 @@ function gh_create_repo() {
 function gh_push() {
     if [ -z "$1" ]; then
         echo "Usage: gh_push <commit_message>"
-        return 1
+        return 1;
     fi
     git add . || { echo "Failed to add files"; return 1; }
     git commit -m "$1" || { echo "Failed to commit"; return 1; }
@@ -91,7 +92,7 @@ alias gr='git remote'
 function init_deb_package() {
     if [ -z "$1" ]; then
         echo "Usage: init_deb_package <package_name> [<source_url>]"
-        return 1
+        return 1;
     fi
     PACKAGE_NAME=$1
     SOURCE_URL=$2
@@ -225,7 +226,7 @@ dcupdate() {
 dexec_all() {
     if [ $# -eq 0 ]; then
         echo "Usage: dexec_all <command>"
-        return 1
+        return 1;
     fi
     for container in $(docker ps --format "{{.Names}}"); do
         echo "Executing in $container:"
