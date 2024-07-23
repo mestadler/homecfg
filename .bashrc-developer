@@ -1,0 +1,245 @@
+# ~/.bashrc-developer: Developer-specific bash configuration
+
+# Environment variables
+
+# GitHub configuration
+export GITHUB_USERNAME="mestadler"
+if [ -f ~/.tokens/.github_token ]; then
+    export GITHUB_TOKEN=$(cat ~/.tokens/.github_token)
+fi
+
+# Package building configuration
+export DEBFULLNAME="martin (mes) stadler"
+export DEBEMAIL="martin@sansnom.co"
+
+# Git configuration
+export GIT_AUTHOR_NAME="$DEBFULLNAME"
+export GIT_AUTHOR_EMAIL="$DEBEMAIL"
+export GIT_COMMITTER_NAME="$DEBFULLNAME"
+export GIT_COMMITTER_EMAIL="$DEBEMAIL"
+
+# GitHub functions
+
+# GitHub clone function
+# This function clones a repository from your GitHub account.
+# Usage: gh_clone <repository>
+function gh_clone() {
+    if [ -z "$1" ]; then
+        echo "Usage: gh_clone <repository>"
+        return 1
+    fi
+    git clone https://github.com/$GITHUB_USERNAME/$1.git || { echo "Failed to clone repository"; return 1; }
+}
+
+# GitHub create repository function
+# This function creates a new repository in your GitHub account using the GitHub API.
+# Usage: gh_create_repo <repository_name>
+function gh_create_repo() {
+    if [ -z "$1" ]; then
+        echo "Usage: gh_create_repo <repository_name>"
+        return 1
+    fi
+    curl -u $GITHUB_USERNAME:$GITHUB_TOKEN https://api.github.com/user/repos -d "{\"name\":\"$1\"}" || { echo "Failed to create repository"; return 1; }
+}
+
+# GitHub push function
+# This function stages all changes, commits them with a message, and pushes to the master branch.
+# Usage: gh_push <commit_message>
+function gh_push() {
+    if [ -z "$1" ]; then
+        echo "Usage: gh_push <commit_message>"
+        return 1
+    fi
+    git add . || { echo "Failed to add files"; return 1; }
+    git commit -m "$1" || { echo "Failed to commit"; return 1; }
+    git push origin master || { echo "Failed to push"; return 1; }
+}
+
+# GitHub aliases
+# Aliases for common git commands to simplify usage and improve productivity.
+alias gh-status='git status'
+alias gh-add='git add'
+alias gh-commit='git commit -m'
+alias gh-push='git push'
+alias gh-log='git log'
+alias gh-checkout='git checkout'
+alias gh-branch='git branch'
+alias gh-diff='git diff'
+alias gh-merge='git merge'
+alias gh-remote='git remote'
+alias gh-clone='git clone'
+
+# Git aliases
+# More concise aliases for common git commands to enhance workflow efficiency.
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git log'
+alias gco='git checkout'
+alias gb='git branch'
+alias gd='git diff'
+alias gm='git merge'
+alias gr='git remote'
+
+# Package building functions and aliases
+
+# Function to initialize a new Debian package
+# This function sets up the initial structure for a Debian package.
+# It optionally downloads source code, configures the package metadata, and initializes a git repository.
+# Usage: init_deb_package <package_name> [<source_url>]
+function init_deb_package() {
+    if [ -z "$1" ]; then
+        echo "Usage: init_deb_package <package_name> [<source_url>]"
+        return 1
+    fi
+    PACKAGE_NAME=$1
+    SOURCE_URL=$2
+    WORK_DIR=~/deb-packages
+    SOURCE_DIR=$WORK_DIR/$PACKAGE_NAME
+
+    mkdir -p $WORK_DIR || { echo "Failed to create work directory"; return 1; }
+    cd $WORK_DIR || { echo "Failed to change to work directory"; return 1; }
+
+    if [ ! -z "$SOURCE_URL" ]; then
+        wget $SOURCE_URL -O ${PACKAGE_NAME}.tar.gz || { echo "Failed to download source"; return 1; }
+        tar -xzf ${PACKAGE_NAME}.tar.gz || { echo "Failed to extract source"; return 1; }
+    fi
+
+    cd $SOURCE_DIR || { echo "Failed to change to source directory"; return 1; }
+
+    dh_make --createorig -y || { echo "dh_make failed"; return 1; }
+
+    sed -i 's/Maintainer: .*/Maintainer: '"$DEBFULLNAME"' <'"$DEBEMAIL"'>/' debian/control
+    sed -i 's/Section: .*/Section: utils/' debian/control
+    sed -i 's/Description: .*/Description: '"$PACKAGE_NAME"' package/' debian/control
+
+    dch -v 1.0-1 "Initial release" || { echo "dch failed"; return 1; }
+
+    git init || { echo "Failed to initialise git repository"; return 1; }
+    git add . || { echo "Failed to add files to git"; return 1; }
+    git commit -m "Initial commit of Debian packaging for $PACKAGE_NAME" || { echo "Failed to commit"; return 1; }
+}
+
+# Alias for building the package
+# This alias runs the Debian package build process, skipping the signing steps.
+alias build_deb='debuild -us -uc'
+
+# Alias for running lintian
+# This alias checks the built package for common issues using lintian.
+alias check_deb='lintian ../*.changes'
+
+# Function to clean the build environment
+# This function removes the build directory for a specified package.
+# Usage: clean_build_env <package_name>
+function clean_build_env() {
+    cd ~/deb-packages || { echo "Failed to change to deb-packages directory"; return 1; }
+    rm -rf $1 || { echo "Failed to remove package directory"; return 1; }
+    echo "Build environment cleaned for package $1."
+}
+
+# Bash completion sourcing
+
+# Source the bash completion for dh_make
+# Enables bash completion for the dh_make tool if the completion script is available.
+if [ -f /usr/share/bash-completion/completions/dh_make ]; then
+    . /usr/share/bash-completion/completions/dh_make
+fi
+
+# Source the bash completion for debuild
+# Enables bash completion for the debuild tool if the completion script is available.
+if [ -f /usr/share/bash-completion/completions/debuild ]; then
+    . /usr/share/bash-completion/completions/debuild
+fi
+
+# Docker aliases
+alias d='docker'
+alias dc='docker-compose'
+alias dps='docker ps'
+alias dpsa='docker ps -a'
+alias di='docker images'
+alias dip='docker image prune'
+alias dcp='docker container prune'
+alias dvp='docker volume prune'
+alias dnp='docker network prune'
+alias dsp='docker system prune'
+
+# Docker container management
+alias dstart='docker start'
+alias dstop='docker stop'
+alias drestart='docker restart'
+alias dexec='docker exec -it'
+alias dlogs='docker logs'
+alias drm='docker rm'
+alias drmi='docker rmi'
+
+# Docker Compose commands
+alias dcup='docker-compose up'
+alias dcupd='docker-compose up -d'
+alias dcdown='docker-compose down'
+alias dcps='docker-compose ps'
+alias dclogs='docker-compose logs'
+alias dcbuild='docker-compose build'
+alias dcpull='docker-compose pull'
+
+# Docker system information
+alias dsys='docker system df'
+alias dtop='docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.BlockIO}}"'
+
+# Docker cleanup functions
+dcleanc() {
+    docker container prune -f
+    echo "Removed all stopped containers"
+}
+
+dcleani() {
+    docker image prune -af
+    echo "Removed all unused images"
+}
+
+dcleanv() {
+    docker volume prune -f
+    echo "Removed all unused volumes"
+}
+
+dclean() {
+    dcleanc
+    dcleani
+    dcleanv
+    echo "Docker system cleaned"
+}
+
+# Docker Compose project management
+dcupdate() {
+    if [ -f docker-compose.yml ]; then
+        echo "Updating Docker Compose project..."
+        docker-compose pull
+        docker-compose up -d --remove-orphans
+        docker-compose ps
+    else
+        echo "No docker-compose.yml found in current directory"
+    fi
+}
+
+# Function to run a command in all running containers
+dexec_all() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: dexec_all <command>"
+        return 1
+    fi
+    for container in $(docker ps --format "{{.Names}}"); do
+        echo "Executing in $container:"
+        docker exec -it $container $@
+        echo
+    done
+}
+
+# Function to tail logs from all containers in a docker-compose project
+dctail() {
+    if [ -f docker-compose.yml ]; then
+        docker-compose logs -f --tail=100
+    else
+        echo "No docker-compose.yml found in current directory"
+    fi
+}
+

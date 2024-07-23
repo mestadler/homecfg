@@ -1,121 +1,186 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
+# ~/.bashrc: Executed by Bash for interactive shells.
 
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
+# Exit early if not running interactively to prevent unnecessary processing.
+[ -z "$PS1" ] && return
 
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
-HISTCONTROL=ignoreboth
+# --- Security ---
+# Auto-logout after 100 minutes of inactivity
+export TMOUT=6000
 
-# append to the history file, don't overwrite it
+# --- Editor settings ---
+# Set Neovim as the default editor
+alias vi='nvim'
+export EDITOR='nvim'
+export VISUAL='nvim'
+
+# --- History settings ---
+# Enable history appending instead of overwriting when closing the shell
 shopt -s histappend
+# Improve history size management
+HISTSIZE=5000
+HISTFILESIZE=10000
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
-
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+# --- Window size management ---
+# Update the window size after each command for programs that require it
 shopt -s checkwinsize
 
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
+# --- Prompt customization ---
+# Customize command prompt to show last command exit status
+PROMPT_COMMAND='LAST_COMMAND_STATUS=$?'
 
-# make less more friendly for non-text input files, see lesspipe(1)
-#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+# --- Alias definitions ---
+alias ls='ls --color=auto'
+alias ll='ls -lh'
+alias la='ls -lAh'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
+# --- Apt alias defs ---
+# # APT aliases - short and long forms
+alias saptu='sudo apt update'
+alias saptg='sudo apt upgrade'
+alias saptf='sudo apt full-upgrade'
+alias sapti='sudo apt install'
+alias saptr='sudo apt remove'
+alias sapta='sudo apt autoremove'
+alias saptp='sudo apt purge'
+alias apts='apt search'
+alias aptsh='apt show'
+alias aptl='apt list'
+alias aptlu='apt list --upgradable'
+alias saptc='sudo apt clean'
+alias saptac='sudo apt autoclean'
+
+# Keeping some long form aliases for clarity
+alias apt-update='saptu'
+alias apt-upgrade='saptg'
+alias apt-full-upgrade='saptf'
+alias apt-install='sapti'
+alias apt-remove='saptr'
+alias apt-autoremove='sapta'
+alias apt-purge='saptp'
+alias apt-search='apts'
+alias apt-show='aptsh'
+alias apt-list='aptl'
+alias apt-list-upgradable='aptlu'
+alias apt-clean='saptc'
+alias apt-autoclean='saptac'
+
+# Function for a full system update
+sapt-update-all() {
+    saptu
+    saptf -y
+    sapta -y
+    saptc
+    echo "System update complete."
+}
+alias apt-update-all='sapt-update-all'
+
+# --- Color support ---
+# Enable color support for 'ls' and directory colors
+export CLICOLOR=1
+export LSCOLORS=ExFxBxDxCxegedabagacad
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
-esac
-
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
+# --- Programmable completion ---
+# Enable programmable completion features if available
+if ! shopt -oq posix; then
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
     fi
 fi
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
+# --- Command history search ---
+# Use fzf for searching through command history
+bind '"\C-r": "\C-a fzf_history\n"'
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
+# --- Custom configurations ---
+# Source custom alias, export, and function files for user-specific configurations
+for file in ~/.bash_aliases ~/.bash_exports ~/.bash_functions; do
+    if [ -r "$file" ] && [ -f "$file" ]; then
+        source "$file"
+    elif [ -f "$file" ]; then
+        echo "Warning: $file is not readable. Skipping."
+    fi
+done
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+# --- Build environment settings ---
+# ccache configuration
+export CCACHE_DIR="$HOME/.ccache"
+export CC="ccache gcc"
+export CXX="ccache g++"
 
-    #alias grep='grep --color=auto'
-    #alias fgrep='fgrep --color=auto'
-    #alias egrep='egrep --color=auto'
-fi
+# Optional: Set the maximum cache size
+export CCACHE_MAXSIZE="20G"
 
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+# Function to configure ccache on shell start
+configure_ccache() {
+    ccache --max-size=$CCACHE_MAXSIZE
+}
 
-# some more ls aliases
-#alias ll='ls -l'
-#alias la='ls -A'
-#alias l='ls -CF'
+# Call the function
+configure_ccache
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+# Optimization flags for building software
+export CFLAGS="-O3 -march=native -mtune=native -pipe -mfpmath=sse -funroll-loops"
+export CXXFLAGS="${CFLAGS}"
 
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+# Source the developer variables, functions and aliases
+if [ -f ~/.bashrc-developer ]; then
+    . ~/.bashrc-developer
 fi
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+# --- PATH settings ---
+# Prepend the user's private bin directory to the PATH if it exists
+if [ -d "$HOME/bin" ]; then
+    PATH="$HOME/bin:$PATH"
 fi
 
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-        source /etc/profile.d/vte.sh
+# --- Python virtual environments ---
+# Activate Python virtual environments more easily with virtualenvwrapper
+if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
+    export WORKON_HOME=$HOME/.virtualenvs
+    source /usr/local/bin/virtualenvwrapper.sh
 fi
 
+# --- Platform-specific configurations ---
+# Load platform-specific configurations from a separate file
+if [ -f ~/.bashrc_platform ]; then
+    source ~/.bashrc_platform
+fi
 
-# Created by `pipx` on 2023-04-07 13:31:07
+# --- Additional environment settings ---
+. "$HOME/.cargo/env"
 export PATH="$PATH:/home/martin/.local/bin"
+[ -f /home/martin/.shelloracle.bash ] && source /home/martin/.shelloracle.bash
+
+# --- Kitty terminal integration ---
+if [[ "$TERM" == "xterm-kitty" ]]; then
+    source <(kitty + complete setup bash)
+fi
+
+# Initialize Starship
+eval "$(starship init bash)"
+
+# Function to list all aliases
+list_aliases() {
+    printf "%-20s %s\n" "Alias" "Command"
+    printf "%-20s %s\n" "-----" "-------"
+    alias | sort | sed "s/alias //" | sed "s/='/ /" | sed "s/'$//" | \
+    while read -r line; do
+        alias=$(echo $line | cut -d' ' -f1)
+        command=$(echo $line | cut -d' ' -f2-)
+        printf "%-20s %s\n" "$alias" "$command"
+    done
+}
+
+# Alias for the list_aliases function
+alias aliases='list_aliases'
+
+# --- Completion message ---
+echo "--- .bashrc successfully loaded ---"

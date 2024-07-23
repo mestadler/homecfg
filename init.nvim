@@ -1,0 +1,28 @@
+" Basic settings
+# ~/.config/nvim/init.nvim
+
+set number              " Show line numbers
+set relativenumber      " Show relative line numbers
+set tabstop=4           " Set tab width to 4 spaces
+set shiftwidth=4        " Set indent width to 4 spaces
+set expandtab           " Use spaces instead of tabs
+set smarttab            " Insert tabs based on shiftwidth
+set autoindent          " Enable auto indentation
+set smartindent         " Enable smart indentation
+set ignorecase          " Ignore case when searching
+set smartcase           " Override ignorecase if search contains uppercase letters
+set incsearch           " Highlight search matches as you type
+set hlsearch            " Highlight all search matches
+set cursorline          " Highlight the current line
+set ruler               " Show cursor position in the status line
+set laststatus=2        " Always show the status line
+set showcmd             " Show incomplete commands
+set wildmenu            " Enable command-line completion
+set showmatch           " Highlight matching brackets
+set mouse=a             " Enable mouse support
+syntax on               " Turn on syntax
+
+" Color scheme
+colorscheme gruvbox
+set background=dark     " Use the dark variant of gruvbox
+
