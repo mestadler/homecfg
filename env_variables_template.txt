@@ -1,0 +1,45 @@
+# env_variables_template.txt
+
+# System configuration
+LANG="en_GB.UTF-8"                     # Set your desired locale
+LC_ALL="en_GB.UTF-8"                   # Set your desired locale
+TZ="Europe/London"                     # Set your timezone
+
+# GitHub configuration
+GITHUB_USERNAME="your-github-username" # Replace with your GitHub username
+GITHUB_TOKEN="your-github-token"       # Replace with your GitHub token
+
+# Package building configuration
+DEBFULLNAME="Your Full Name"           # Replace with your full name
+DEBEMAIL="your-email@example.com"      # Replace with your email address
+
+# OpenAI API Key
+OPENAI_GPT_API_KEY="your-openai-api-key" # Replace with your OpenAI API key
+
+# Editor settings
+EDITOR="nvim"                          # Set your preferred editor (e.g., vim, nano)
+VISUAL="nvim"                          # Set your preferred visual editor
+
+# ccache configuration
+CCACHE_MAXSIZE="20G"                   # Set the maximum cache size for ccache
+
+# Paths
+CUSTOM_PATH="/path/to/custom/bin"      # Replace with your custom binary path
+PROJECT_HOME="$HOME/Projects"          # Set the base directory for your projects
+SCRIPT_HOME="$HOME/scripts"            # Set the directory for your custom scripts
+
+# Docker and Kubernetes
+DOCKER_HOST="tcp://127.0.0.1:2375"     # Configure your Docker daemon host
+KUBECONFIG="$HOME/.kube/config"        # Set the path to your Kubernetes config file
+
+# AWS credentials
+AWS_ACCESS_KEY_ID="your-access-key-id" # Replace with your AWS access key ID
+AWS_SECRET_ACCESS_KEY="your-secret-access-key" # Replace with your AWS secret access key
+AWS_DEFAULT_REGION="us-west-2"         # Set your default AWS region
+
+# Build environment
+CC="gcc"                               # Set your preferred C compiler
+CXX="g++"                              # Set your preferred C++ compiler
+CFLAGS="-O2 -march=native"             # Set your C compilation flags
+CXXFLAGS="-O2 -march=native"           # Set your C++ compilation flags
+MAKEFLAGS="-j$(nproc)"                 # Set the default number of jobs for make
