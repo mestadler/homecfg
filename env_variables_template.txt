@@ -13,8 +13,12 @@ GITHUB_TOKEN="your-github-token"       # Replace with your GitHub token
 DEBFULLNAME="Your Full Name"           # Replace with your full name
 DEBEMAIL="your-email@example.com"      # Replace with your email address
 
-# OpenAI API Key
+# OpenAI API Key (used by shell_gpt and other tools)
 OPENAI_GPT_API_KEY="your-openai-api-key" # Replace with your OpenAI API key
+
+# shell_gpt configuration
+DEFAULT_MODEL="gpt-4o-2024-05-13"        # Set the default model for shell_gpt
+OPENAI_API_KEY="$OPENAI_GPT_API_KEY"     # Use the OpenAI API key from the environment
 
 # Editor settings
 EDITOR="nvim"                          # Set your preferred editor (e.g., vim, nano)
@@ -33,9 +37,9 @@ DOCKER_HOST="tcp://127.0.0.1:2375"     # Configure your Docker daemon host
 KUBECONFIG="$HOME/.kube/config"        # Set the path to your Kubernetes config file
 
 # AWS credentials
-AWS_ACCESS_KEY_ID="your-access-key-id" # Replace with your AWS access key ID
-AWS_SECRET_ACCESS_KEY="your-secret-access-key" # Replace with your AWS secret access key
-AWS_DEFAULT_REGION="us-west-2"         # Set your default AWS region
+# AWS_ACCESS_KEY_ID="your-access-key-id" # Replace with your AWS access key ID
+# AWS_SECRET_ACCESS_KEY="your-secret-access-key" # Replace with your AWS secret access key
+# AWS_DEFAULT_REGION="us-west-2"         # Set your default AWS region
 
 # Build environment
 CC="gcc"                               # Set your preferred C compiler
