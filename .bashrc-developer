@@ -1,16 +1,30 @@
 # ~/.bashrc-developer: Developer-specific bash configuration
+# last updated 02/09/2024
 
-# Environment variables
+# Prompt the user for any missing details if they aren't set already
+if [ -z "$GITHUB_USERNAME" ]; then
+    read -p "Enter your GitHub username: " GITHUB_USERNAME
+fi
 
-# GitHub configuration
-export GITHUB_USERNAME="mestadler"
-if [ -f ~/.tokens/.github_token ]; then
+if [ -z "$GITHUB_TOKEN" ] && [ -f ~/.tokens/.github_token ]; then
     export GITHUB_TOKEN=$(cat ~/.tokens/.github_token)
 fi
 
+if [ -z "$DEBFULLNAME" ]; then
+    read -p "Enter your full name (e.g., John Doe): " DEBFULLNAME
+fi
+
+if [ -z "$DEBEMAIL" ]; then
+    read -p "Enter your email address: " DEBEMAIL
+fi
+
+# GitHub configuration
+export GITHUB_USERNAME
+export GITHUB_TOKEN
+
 # Package building configuration
-export DEBFULLNAME="martin (mes) stadler"
-export DEBEMAIL="martin@sansnom.co"
+export DEBFULLNAME
+export DEBEMAIL
 
 # Git configuration
 export GIT_AUTHOR_NAME="$DEBFULLNAME"
