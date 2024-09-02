@@ -10,8 +10,21 @@ if [ "$(id -u)" -eq 0 ]; then
     exit 1
 fi
 
-# Store the current user
-ORIGINAL_USER="$USER"
+# Prompt for user details if not already set
+if [ -z "$GITHUB_USERNAME" ]; then
+    read -p "Enter your GitHub username: " GITHUB_USERNAME
+    export GITHUB_USERNAME
+fi
+
+if [ -z "$DEBFULLNAME" ]; then
+    read -p "Enter your full name (e.g., John Doe): " DEBFULLNAME
+    export DEBFULLNAME
+fi
+
+if [ -z "$DEBEMAIL" ]; then
+    read -p "Enter your email address: " DEBEMAIL
+    export DEBEMAIL
+fi
 
 # Function to run commands as root using su
 run_as_root() {
