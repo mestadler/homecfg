@@ -4,11 +4,19 @@
 [ -z "$PS1" ] && return
 
 # --- Security ---
-# Auto-logout after 100 minutes of inactivity
+# Auto-logout after 100 minutes of inactivity (customize this value as needed)
 export TMOUT=6000
 
 # --- Tokens ---
-export OPENAI_GPT_API_KEY=$(cat ~/.tokens/openai_gpt_api_key)
+# Replace this with a prompt or secure method to load API keys
+# Prompt the user for OpenAI API key if not already set
+if [ -z "$OPENAI_GPT_API_KEY" ] && [ -f ~/.tokens/openai_gpt_api_key ]; then
+    export OPENAI_GPT_API_KEY=$(cat ~/.tokens/openai_gpt_api_key)
+elif [ -z "$OPENAI_GPT_API_KEY" ]; then
+    read -sp "Enter your OpenAI GPT API Key: " OPENAI_GPT_API_KEY
+    echo
+    export OPENAI_GPT_API_KEY
+fi
 
 # --- Editor settings ---
 # Set Neovim as the default editor
@@ -39,8 +47,8 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-# --- Apt alias defs ---
-# # APT aliases - short and long forms
+# --- Apt alias definitions ---
+# APT aliases - short and long forms
 alias saptu='sudo apt update'
 alias saptg='sudo apt upgrade'
 alias saptf='sudo apt full-upgrade'
@@ -133,7 +141,7 @@ configure_ccache
 export CFLAGS="-O3 -march=native -mtune=native -pipe -mfpmath=sse -funroll-loops"
 export CXXFLAGS="${CFLAGS}"
 
-# Source the developer variables, functions and aliases
+# Source the developer variables, functions, and aliases
 if [ -f ~/.bashrc-developer ]; then
     . ~/.bashrc-developer
 fi
@@ -158,16 +166,22 @@ if [ -f ~/.bashrc_platform ]; then
 fi
 
 # --- Additional environment settings ---
+# Ensure paths and environment settings are properly configured
 . "$HOME/.cargo/env"
-export PATH="$PATH:/home/martin/.local/bin"
-[ -f /home/martin/.shelloracle.bash ] && source /home/martin/.shelloracle.bash
+export PATH="$PATH:$HOME/.local/bin"
+
+# Securely source other private or custom shell configurations
+if [ -f "$HOME/.shelloracle.bash" ]; then
+    source "$HOME/.shelloracle.bash"
+fi
 
 # --- Kitty terminal integration ---
+# Add completion for the Kitty terminal if applicable
 if [[ "$TERM" == "xterm-kitty" ]]; then
     source <(kitty + complete setup bash)
 fi
 
-# Initialize Starship
+# Initialize Starship prompt
 eval "$(starship init bash)"
 
 # Function to list all aliases
