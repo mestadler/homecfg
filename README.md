@@ -24,7 +24,7 @@ Sharing as it may be useful for others (and I need it to be a public repo).
 
 1. Clone this repository:
    ```
-   git clone https://github.com/yourusername/devbox-setup.git
+   git clone[https://github.com/yourusername/devbox-setup.git
    cd devbox-setup
    ```
 
@@ -35,7 +35,7 @@ Sharing as it may be useful for others (and I need it to be a public repo).
 
 3. Edit `env_variables.txt` with your specific details:
    ```
-   nano env_variables.txt
+   vi env_variables.txt
    ```
 
 4. Make the scripts executable:
