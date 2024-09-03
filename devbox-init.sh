@@ -78,11 +78,18 @@ run_as_root dpkg-reconfigure --priority=low unattended-upgrades
 
 # Kubernetes installation
 echo "Setting up Kubernetes..."
-run_as_root curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | run_as_root apt-key add -
-echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | run_as_root tee /etc/apt/sources.list.d/kubernetes.list
-run_as_root apt update
-run_as_root apt install -y kubelet="$KUBERNETES_VERSION" kubeadm="$KUBERNETES_VERSION" kubectl="$KUBERNETES_VERSION"
+# Add Kubernetes apt repository
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | run_as_root tee /etc/apt/sources.list.d/kubernetes.list
+
+# Update package list and install Kubernetes components
+run_as_root apt-get update
+run_as_root apt-get install -y kubelet="$KUBERNETES_VERSION" kubeadm="$KUBERNETES_VERSION" kubectl="$KUBERNETES_VERSION"
+
+# Hold Kubernetes packages to prevent accidental upgrades
 run_as_root apt-mark hold kubelet kubeadm kubectl
+
+# Enable and start the kubelet service
+run_as_root systemctl enable --now kubelet
 
 # Clone and execute user configuration deployment script
 echo "Cloning configuration repository and running the deployment script..."
