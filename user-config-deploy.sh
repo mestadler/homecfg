@@ -1,7 +1,27 @@
 #!/bin/bash
 
-set -e
+# user-config-deploy.sh
+#
+# Description:
+#   Reminder this script deploys user-specific configurations, including dotfiles and
+#   special configuration files. It's called by devbox-init.sh after the devbox-init is
+#   done.  You can run this script on its own like below.
+#
+# Usage:
+#   ./user-config-deploy.sh <path_to_env_file> [--dry-run]
+#
+# Arguments:
+#   <path_to_env_file>: Path to the environment file containing configuration variables
+#   --dry-run: Optional flag to run the script without making changes
+#
+# Note:
+#   - This script expects environment variables like REPO_URL, DOTFILES, and SPECIAL_CONFIGS
+#     to be defined in the environment file.
+#   - It will clone a configuration repository, deploy dotfiles, and handle special configs.
+#
+# /mes - https://github.com/mestadler/sans-devbox-bootstrap
 
+set -e
 SCRIPT_VERSION="1.4"
 LAST_UPDATED="2024-09-04"
 
@@ -14,7 +34,9 @@ usage() {
 }
 
 # Check if env file path is provided
+# Check if env file path is provided
 if [ "$#" -lt 1 ]; then
+    echo "Error: No environment file specified."
     usage
 fi
 
@@ -24,11 +46,22 @@ shift
 # Check if env file exists
 if [ ! -f "$ENV_FILE" ]; then
     echo "Error: Environment file $ENV_FILE does not exist."
+    echo "Current working directory: $(pwd)"
+    echo "Contents of current directory:"
+    ls -la
     exit 1
 fi
 
 # Source the environment file
 source "$ENV_FILE"
+
+# Add a check to print out some key variables
+echo "Checking environment variables:"
+echo "ENV_FILE: $ENV_FILE"
+echo "REPO_URL: $REPO_URL"
+echo "DOTFILES: $DOTFILES"
+echo "SPECIAL_CONFIGS: $SPECIAL_CONFIGS"
+
 
 DRY_RUN=false
 if [[ "$1" == "--dry-run" ]]; then
@@ -39,7 +72,6 @@ fi
 # Logging setup
 LOG_FILE="$HOME/user_config_deploy.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
-
 echo "Starting user-config-deploy.sh version $SCRIPT_VERSION (Last updated: $LAST_UPDATED)"
 echo "Deployment started at $(date)"
 
