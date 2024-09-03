@@ -1,4 +1,4 @@
-" Basic settings
+# Basic settings
 # ~/.config/nvim/init.nvim
 
 set number              " Show line numbers
