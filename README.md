@@ -1,26 +1,28 @@
 # DevBox Setup
 
-DevBox Setup are a collection of scripts and configs, to setup a dev box after install of debian. It includes scripts for system configuration, package installation, and deployment of user-specific settings.
-Sharing as it may be useful for others (and I need it to be a public repo).
+DevBox Setup is a collection of scripts and configs to set up a dev box after installing Debian. It includes scripts for system configuration, package installation, and deployment of user-specific settings. Shared as it may be useful for others (and I need it to be a public repo).
 
 ## Version
 
-- Current Version: 1.0
+- Current Version: 1.1
 - Last Updated: 2024-09-04
 
 ## Repository Contents
 
 - `devbox-init.sh`: Main script for system setup and package installation.
 - `user-config-deploy.sh`: Script for deploying user-specific configurations and dotfiles.
-- `env_variables_template.txt`: Template for environment variables used by both scripts.
+- `.env.example`: Template for environment variables used by both scripts.
 
 ## Prerequisites
 
 - A Debian-based Linux distribution (e.g., Ubuntu)
 - `sudo` access
 - `git` installed
+- `curl` installed (for remote execution)
 
 ## Getting Started
+
+### Local Execution
 
 1. Clone this repository:
    ```
@@ -30,12 +32,12 @@ Sharing as it may be useful for others (and I need it to be a public repo).
 
 2. Create your environment variables file:
    ```
-   cp env_variables_template.txt env_variables.txt
+   cp .env.example .env
    ```
 
-3. Edit `env_variables.txt` with your specific details:
+3. Edit `.env` with your specific details:
    ```
-   vi env_variables.txt
+   vi .env
    ```
 
 4. Make the scripts executable:
@@ -45,8 +47,18 @@ Sharing as it may be useful for others (and I need it to be a public repo).
 
 5. Run the main setup script:
    ```
-   ./devbox-init.sh /path/to/your/env_variables.txt
+   ./devbox-init.sh .env
    ```
+
+### Remote Execution
+
+To run the setup directly using curl:
+
+```bash
+curl -sS https://raw.githubusercontent.com/mestadler/sans-devbox-bootstrap/main/devbox-init.sh | bash -s -- .env
+```
+
+Note: Ensure you have your `.env` file prepared before running this command.
 
 ## Script Details
 
@@ -64,7 +76,7 @@ This script performs the following tasks:
 
 Usage:
 ```
-./devbox-init.sh /path/to/your/env_variables.txt
+./devbox-init.sh .env
 ```
 
 ### user-config-deploy.sh
@@ -77,12 +89,12 @@ This script handles user-specific configurations:
 
 Usage:
 ```
-./user-config-deploy.sh /path/to/your/env_variables.txt [--dry-run]
+./user-config-deploy.sh .env [--dry-run]
 ```
 
 ## Environment Variables
 
-The `env_variables.txt` file (created from `env_variables_template.txt`) contains all necessary configuration settings. Key sections include:
+The `.env` file (created from `.env.example`) contains all necessary configuration settings. Key sections include:
 
 - System configuration (locale, timezone)
 - User information (GitHub username, email)
@@ -96,12 +108,12 @@ Ensure all placeholder values in this file are replaced with your actual data be
 
 ## Customization
 
-- Modify the `PACKAGES` variable in `env_variables.txt` to customize installed packages.
+- Modify the `PACKAGES` variable in `.env` to customize installed packages.
 - Adjust the `DOTFILES` and `SPECIAL_CONFIGS` variables to manage your specific configuration files.
 
 ## Security Note
 
-The `env_variables.txt` file may contain sensitive information. Keep it secure and do not share it publicly.
+The `.env` file may contain sensitive information. Keep it secure and do not share it publicly. Ensure `.env` is added to your `.gitignore` file to prevent accidental commits.
 
 ## Contributing
 
@@ -113,4 +125,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- Devs that have shared their dot files, and config, thank you.
+- Devs that have shared their dot files and configs, thank you.
