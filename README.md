@@ -25,7 +25,7 @@ Sharing as it may be useful for others (and I need it to be a public repo).
 1. Clone this repository:
    ```
    git clone https://github.com/mestadler/sans-devbox-bootstrap.git
-   cd devbox-setup
+   cd sans-devbox-bootstrap
    ```
 
 2. Create your environment variables file:
