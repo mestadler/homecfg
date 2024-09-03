@@ -1,49 +1,75 @@
 # env_variables_template.txt
+# Version: 1.3
+# Last Updated: 2024-09-04
+
+# This file contains environment variables used by devbox-init.sh and user-config-deploy.sh scripts.
+# IMPORTANT: This file may contain sensitive information. Do not share it publicly.
+# INSTRUCTIONS:
+# 1. Make a copy of this file and rename it to 'env_variables.txt'.
+# 2. Replace the placeholder values with your actual data.
+# 3. Use this file as an argument when running the setup scripts:
+#    ./devbox-init.sh /path/to/your/env_variables.txt
+#    ./user-config-deploy.sh /path/to/your/env_variables.txt [--dry-run]
 
 # System configuration
-LANG="en_GB.UTF-8"                     # Set your desired locale
-LC_ALL="en_GB.UTF-8"                   # Set your desired locale
-TZ="Europe/London"                     # Set your timezone
+LANG="en_GB.UTF-8"
+LC_ALL="en_GB.UTF-8"
+TZ="Europe/London"
+
+# User configuration
+GITHUB_USERNAME="your-github-username"
+DEBFULLNAME="Your Full Name"
+DEBEMAIL="your-email@example.com"
 
 # GitHub configuration
-GITHUB_USERNAME="your-github-username" # Replace with your GitHub username
-GITHUB_TOKEN="your-github-token"       # Replace with your GitHub token
-
-# Package building configuration
-DEBFULLNAME="Your Full Name"           # Replace with your full name
-DEBEMAIL="your-email@example.com"      # Replace with your email address
+GITHUB_TOKEN="your-github-token"
 
 # OpenAI API Key (used by shell_gpt and other tools)
-OPENAI_GPT_API_KEY="your-openai-api-key" # Replace with your OpenAI API key
+OPENAI_GPT_API_KEY="your-openai-api-key"
 
 # shell_gpt configuration
-DEFAULT_MODEL="gpt-4o-2024-05-13"        # Set the default model for shell_gpt
-OPENAI_API_KEY="$OPENAI_GPT_API_KEY"     # Use the OpenAI API key from the environment
+DEFAULT_MODEL="gpt-4o-2024-05-13"
+OPENAI_API_KEY="$OPENAI_GPT_API_KEY"
 
 # Editor settings
-EDITOR="nvim"                          # Set your preferred editor (e.g., vim, nano)
-VISUAL="nvim"                          # Set your preferred visual editor
+EDITOR="nvim"
+VISUAL="nvim"
 
 # ccache configuration
-CCACHE_MAXSIZE="20G"                   # Set the maximum cache size for ccache
+CCACHE_MAXSIZE="20G"
 
 # Paths
-CUSTOM_PATH="/path/to/custom/bin"      # Replace with your custom binary path
-PROJECT_HOME="$HOME/Projects"          # Set the base directory for your projects
-SCRIPT_HOME="$HOME/scripts"            # Set the directory for your custom scripts
+CUSTOM_PATH="/path/to/custom/bin"
+PROJECT_HOME="$HOME/Projects"
+SCRIPT_HOME="$HOME/scripts"
 
 # Docker and Kubernetes
-DOCKER_HOST="tcp://127.0.0.1:2375"     # Configure your Docker daemon host
-KUBECONFIG="$HOME/.kube/config"        # Set the path to your Kubernetes config file
+DOCKER_HOST="tcp://127.0.0.1:2375"
+KUBECONFIG="$HOME/.kube/config"
 
-# AWS credentials
-# AWS_ACCESS_KEY_ID="your-access-key-id" # Replace with your AWS access key ID
-# AWS_SECRET_ACCESS_KEY="your-secret-access-key" # Replace with your AWS secret access key
-# AWS_DEFAULT_REGION="us-west-2"         # Set your default AWS region
+# AWS credentials (uncomment if needed)
+# AWS_ACCESS_KEY_ID="your-access-key-id"
+# AWS_SECRET_ACCESS_KEY="your-secret-access-key"
+# AWS_DEFAULT_REGION="us-west-2"
 
 # Build environment
-CC="gcc"                               # Set your preferred C compiler
-CXX="g++"                              # Set your preferred C++ compiler
-CFLAGS="-O2 -march=native"             # Set your C compilation flags
-CXXFLAGS="-O2 -march=native"           # Set your C++ compilation flags
-MAKEFLAGS="-j$(nproc)"                 # Set the default number of jobs for make
+CC="gcc"
+CXX="g++"
+CFLAGS="-O2 -march=native"
+CXXFLAGS="-O2 -march=native"
+MAKEFLAGS="-j$(nproc)"
+
+# Repository URL for user-config-deploy.sh
+REPO_URL="https://github.com/yourusername/devbox-setup.git"
+
+# Kubernetes version for devbox-init.sh
+KUBERNETES_VERSION="1.26.0-00"
+
+# List of packages to install (customize as needed)
+PACKAGES="apt-transport-https apt-utils autofs bashtop bless build-essential ca-certificates cargo ccache ctop curl debian-archive-keyring debian-keyring debsums dh-cargo dstat duf duff duc ethtool fakeroot fastfetch fio flex firmware-linux firmware-linux-free firmware-linux-nonfree fzf fwupd fwupdmgr gnupg gawk gettext git hexcurse htop hwinfo iperf3 kernel-package libaio libblkid libclang libfuse3-dev libkeyutils liblz4 libncurses-dev libncurses5-dev libncursesw5-dev libscrypt-dev libsodium libssl-dev liburcu libuuid libzstd lsb-release markdownlint nala ncdu neovim netselect-apt net-tools nfs-common nmap openssh-server pkg-config postmark python3 python3-pyclipper python3-pytest r8168-dkms rsync rustc smbios-utils software-properties-common speedtest-cli sysstat thefuck tldr tweak unzip valgrind wget whois zlib1g zlib1g-dev"
+
+# Dotfiles to be managed by user-config-deploy.sh
+DOTFILES=".bashrc .bashrc-developer .gitconfig .vimrc .sgptrc"
+
+# Special configuration files and their destinations
+SPECIAL_CONFIGS="init.nvim:$HOME/.config/nvim/init.nvim kitty.conf:$HOME/.config/kitty/kitty.conf .sgptrc:$HOME/.config/shell_gpt/.sgptrc"
