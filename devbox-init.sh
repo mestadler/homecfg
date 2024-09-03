@@ -104,6 +104,9 @@ echo "Configuring automatic security updates..."
 run_as_root apt install -y unattended-upgrades
 run_as_root dpkg-reconfigure -plow unattended-upgrades
 
+echo "Setting up Starship globally"
+curl -fsSL https://starship.rs/install.sh | run_as_root sh -s -- -y
+
 echo "Setting up Kubernetes..."
 curl -fsSL "https://pkgs.k8s.io/core:/stable:/${KUBERNETES_VERSION}/deb/Release.key" | run_as_root gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/${KUBERNETES_VERSION}/deb/ /" | run_as_root tee /etc/apt/sources.list.d/kubernetes.list
