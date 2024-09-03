@@ -39,9 +39,9 @@ VISUAL="nvim"
 CCACHE_MAXSIZE="20G"
 
 # Paths
-CUSTOM_PATH="/path/to/custom/bin"
-PROJECT_HOME="$HOME/Projects"
-SCRIPT_HOME="$HOME/scripts"
+# CUSTOM_PATH="/path/to/custom/bin"
+# DEVOPS="$HOME/DevOps"
+# SCRIPT_HOME="$HOME/DevOps/Scripts"
 
 # Docker and Kubernetes
 DOCKER_HOST="tcp://127.0.0.1:2375"
