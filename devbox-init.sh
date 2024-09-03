@@ -23,15 +23,9 @@ set -e
 SCRIPT_VERSION="2.4"
 LAST_UPDATED="2024-09-04"
 
-# Debug information
-echo "Initial PATH: $PATH"
-echo "Current user: $(whoami)"
-echo "Current directory: $(pwd)"
 
 # Ensure /usr/bin is in the PATH
 export PATH="/usr/bin:$PATH"
-
-echo "Updated PATH: $PATH"
 
 ENV_FILE=".env"
 
