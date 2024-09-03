@@ -1,84 +1,116 @@
-# Getting Started
+# DevBox Setup
 
-This repository contains scripts and configuration files for automating the setup of a development environment. The main script, devbox-init.sh, installs necessary packages, configures system settings, and sets up Kubernetes components. It also includes a script for applying user-specific configurations and a template for environment variables. The repo aims to streamline the process of preparing a system for development work.
+DevBox Setup are a collection of scripts and configs, to setup a dev box after install of debian. It includes scripts for system configuration, package installation, and deployment of user-specific settings.
+Sharing as it may be useful for others (and I need it to be a public repo).
 
-The primary script, `devbox-init.sh`, automates the initial setup, while the other configuration files help customise the environment.
-It will change your system.
+## Version
+
+- Current Version: 1.0
+- Last Updated: 2024-09-04
 
 ## Repository Contents
 
-- **`devbox-init.sh`**: 
-  - Script applies the system packages and configuration for basic development.
-  - **Functionality**:
-    - Installs required packages and updates the system.
-    - Configures locale, timezone, networking, and other system settings.
-    - Sets up Kubernetes components (kubeadm, kubelet, kubectl).
-    - Applies environment-specific settings using `env_variables.txt`.
-  
-- **`dothome.sh`**: 
-  - Script applies user-specific configurations after the initial system setup.
-  - **Functionality**:
-    - Clones your dotfiles repository and applies custom configurations.
-    - Configures user environment settings, aliases, and functions.
-    - Can be customized to apply any personal tweaks or additional software installations.
+- `devbox-init.sh`: Main script for system setup and package installation.
+- `user-config-deploy.sh`: Script for deploying user-specific configurations and dotfiles.
+- `env_variables_template.txt`: Template for environment variables used by both scripts.
 
-- **`env_variables_template.txt`**:
-  - A template for environment variables required by the scripts and configurations.
-  - **Functionality**:
-    - Provides placeholders for essential environment variables like API keys, paths, and configurations.
-    - Users should copy this template, customize it with their details, and pass it to the setup scripts.
+## Prerequisites
 
-## Very Quick Start
+- A Debian-based Linux distribution (e.g., Ubuntu)
+- `sudo` access
+- `git` installed
 
-- **Create env_variables.txt**: grab the env_variables_template.txt in this repo and modify it.
-- **Run the script**: review it devbox-init.sh
-  
-  ```bash
-   curl -fsSL https://raw.githubusercontent.com/mestadler/homecfg/main/devbox-init.sh | bash -s ~/env_variables.txt
-  ```
+## Getting Started
 
-## Full Quick Start
-
-To quickly set up your development environment using the `devbox-init.sh` script, follow these steps:
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/mestadler/homecfg.git
-   cd homecfg
+1. Clone this repository:
+   ```
+   git clone https://github.com/yourusername/devbox-setup.git
+   cd devbox-setup
    ```
 
-2. **Prepare and Customize Your Environment Variables**:
-   - Copy the template environment variables file and rename it:
-   
-     ```bash
-     cp env_variables_template.txt env_variables.txt
-     ```
-   - Edit the `env_variables.txt` (e.g., GitHub token, API keys, paths):
-     
-     ```bash
-     vim env_variables.txt
-     ```
-     
-   - Ensure that the `DEFAULT_MODEL` and `OPENAI_API_KEY` variables are set if you are using shell_gpt.
-
-3. **Run the Initialization Script**:
-   Execute the `devbox-init.sh` script, passing the `env_variables.txt` file as an argument:
-   
-   ```bash
-   bash devbox-init.sh /path/to/env_variables.txt
+2. Create your environment variables file:
+   ```
+   cp env_variables_template.txt env_variables.txt
    ```
 
-5. **Apply Environment Changes**:
-   If prompted, source the `.bashrc` file to apply the environment changes immediately:
-   
-   ```bash
-   source ~/.bashrc
+3. Edit `env_variables.txt` with your specific details:
+   ```
+   nano env_variables.txt
    ```
 
-7. **Reboot Reminder**:
-   ```bash
-   sudo reboot
+4. Make the scripts executable:
    ```
+   chmod +x devbox-init.sh user-config-deploy.sh
+   ```
+
+5. Run the main setup script:
+   ```
+   ./devbox-init.sh /path/to/your/env_variables.txt
+   ```
+
+## Script Details
+
+### devbox-init.sh
+
+This script performs the following tasks:
+
+- Configures system locale and timezone
+- Sets up network settings
+- Installs specified packages
+- Performs a full system upgrade
+- Configures automatic security updates
+- Sets up Kubernetes
+- Calls `user-config-deploy.sh` to set up user-specific configurations
+
+Usage:
+```
+./devbox-init.sh /path/to/your/env_variables.txt
+```
+
+### user-config-deploy.sh
+
+This script handles user-specific configurations:
+
+- Deploys specified dotfiles
+- Handles special configuration files
+- Provides a dry-run option for testing
+
+Usage:
+```
+./user-config-deploy.sh /path/to/your/env_variables.txt [--dry-run]
+```
+
+## Environment Variables
+
+The `env_variables.txt` file (created from `env_variables_template.txt`) contains all necessary configuration settings. Key sections include:
+
+- System configuration (locale, timezone)
+- User information (GitHub username, email)
+- API keys and tokens
+- Tool-specific configurations
+- Path settings
+- Package list for installation
+- Dotfiles to be managed
+
+Ensure all placeholder values in this file are replaced with your actual data before running the scripts.
+
+## Customization
+
+- Modify the `PACKAGES` variable in `env_variables.txt` to customize installed packages.
+- Adjust the `DOTFILES` and `SPECIAL_CONFIGS` variables to manage your specific configuration files.
+
+## Security Note
+
+The `env_variables.txt` file may contain sensitive information. Keep it secure and do not share it publicly.
+
+## Contributing
+
+Contributions to improve DevBox Setup are welcome. Please feel free to submit pull requests or create issues for bugs and feature requests.
 
 ## License
-This repository is licensed under the MIT License. See the LICENSE file for more information.
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Devs that have shared their dot files, and config, thank you.
